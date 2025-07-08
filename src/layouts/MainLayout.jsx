@@ -25,7 +25,7 @@ const MainLayout = ({ children }) => {
             <a href="https://linkedin.com/school/telkom-university" target="_blank" rel="noopener noreferrer" style={{ color: '#800000', fontSize: 22 }}><FaLinkedin /></a>
           </div>
           <div style={{ fontSize: 13, color: '#888', marginTop: 6 }}>
-            &copy; {new Date().getFullYear()} ORMAWA Telkom University
+            &copy; {new Date().getFullYear()} KP ORMAWA Telkom University
           </div>
         </div>
       </footer>
