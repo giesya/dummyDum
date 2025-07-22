@@ -1,45 +1,43 @@
 import React, { useState, useEffect } from 'react';
 
-const HIMA_LIST = ['HIMAIF', 'HIMADS', 'HMIT', 'HMRPL'];
+const HIMA_LIST = ['HIMAIF', 'HIMADS', 'HMIT', 'HMRPL', 'Independen'];
 
-function getProkerFromStorage() {
-  const data = localStorage.getItem('proker_per_hima');
-  return data ? JSON.parse(data) : { HIMAIF: [], HIMADS: [], HMIT: [], HMRPL: [] };
+function getOrganizationsFromStorage() {
+  const data = localStorage.getItem('organizations');
+  return data ? JSON.parse(data) : [];
 }
-function setProkerToStorage(data) {
-  localStorage.setItem('proker_per_hima', JSON.stringify(data));
+
+function setOrganizationsToStorage(data) {
+  localStorage.setItem('organizations', JSON.stringify(data));
 }
 
 const ProkerManagement = () => {
   const [selectedHima, setSelectedHima] = useState(HIMA_LIST[0]);
-  const [prokerData, setProkerData] = useState(getProkerFromStorage());
-  const [newProker, setNewProker] = useState('');
+  const [organizations, setOrganizations] = useState(getOrganizationsFromStorage());
 
   useEffect(() => {
-    setProkerData(getProkerFromStorage());
+    setOrganizations(getOrganizationsFromStorage());
   }, []);
 
-  const handleAddProker = e => {
-    e.preventDefault();
-    if (!newProker.trim()) return;
-    const updated = { ...prokerData };
-    if (!updated[selectedHima].includes(newProker.trim())) {
-      updated[selectedHima].push(newProker.trim());
-      setProkerToStorage(updated);
-      setProkerData(updated);
-      setNewProker('');
-    }
+  const handleDeleteProker = (prokerId) => {
+    const updatedOrganizations = organizations.map(org => {
+      if (org.name === selectedHima) {
+        return {
+          ...org,
+          proker: (org.proker || []).filter(p => p.id !== prokerId),
+        };
+      }
+      return org;
+    });
+    setOrganizationsToStorage(updatedOrganizations);
+    setOrganizations(updatedOrganizations);
   };
 
-  const handleDeleteProker = idx => {
-    const updated = { ...prokerData };
-    updated[selectedHima].splice(idx, 1);
-    setProkerToStorage(updated);
-    setProkerData(updated);
-  };
+  const currentOrg = organizations.find(org => org.name === selectedHima);
+  const prokers = currentOrg ? currentOrg.proker || [] : [];
 
   return (
-    <div style={{ padding: '2rem', maxWidth: 600, margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: 800, margin: '0 auto' }}>
       <h2>Manajemen Proker ORMAWA</h2>
       <div style={{ marginBottom: 18 }}>
         <label>Pilih HIMA: </label>
@@ -47,25 +45,32 @@ const ProkerManagement = () => {
           {HIMA_LIST.map(hima => <option key={hima} value={hima}>{hima}</option>)}
         </select>
       </div>
-      <form onSubmit={handleAddProker} style={{ display: 'flex', gap: 8, marginBottom: 18 }}>
-        <input
-          type="text"
-          placeholder="Nama Proker Baru"
-          value={newProker}
-          onChange={e => setNewProker(e.target.value)}
-          style={{ flex: 1, padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
-        />
-        <button type="submit" style={{ padding: '8px 16px', background: '#800000', color: 'white', border: 'none', borderRadius: 4, fontWeight: 'bold' }}>Tambah</button>
-      </form>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {prokerData[selectedHima].length === 0 && <li style={{ color: '#888' }}>Belum ada proker</li>}
-        {prokerData[selectedHima].map((proker, idx) => (
-          <li key={proker} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #eee' }}>
-            <span>{proker}</span>
-            <button onClick={() => handleDeleteProker(idx)} style={{ background: '#d32f2f', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', fontWeight: 'bold', cursor: 'pointer' }}>Hapus</button>
-          </li>
-        ))}
-      </ul>
+      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '1rem' }}>
+        <thead>
+          <tr style={{ background: '#f5f5f5' }}>
+            <th style={{ padding: 8, border: '1px solid #ddd' }}>Nama Proker</th>
+            <th style={{ padding: 8, border: '1px solid #ddd' }}>Deskripsi</th>
+            <th style={{ padding: 8, border: '1px solid #ddd' }}>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {prokers.length === 0 ? (
+            <tr>
+              <td colSpan="3" style={{ textAlign: 'center', padding: 16 }}>Belum ada proker.</td>
+            </tr>
+          ) : (
+            prokers.map(proker => (
+              <tr key={proker.id}>
+                <td style={{ padding: 8, border: '1px solid #ddd' }}>{proker.name}</td>
+                <td style={{ padding: 8, border: '1px solid #ddd' }}>{proker.description}</td>
+                <td style={{ padding: 8, border: '1px solid #ddd', textAlign: 'center' }}>
+                  <button onClick={() => handleDeleteProker(proker.id)} style={{ background: '#d32f2f', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', fontWeight: 'bold', cursor: 'pointer' }}>Hapus</button>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };

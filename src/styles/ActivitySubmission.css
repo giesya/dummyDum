@@ -1,0 +1,28 @@
+.activity-submission-container {
+  padding: 2rem;
+  width: 95%;
+  max-width: 2000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.activity-submission-form {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  text-align: left;
+  display: inline-block;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 16px;
+}
+
+.form-col {
+  flex: 1;
+}

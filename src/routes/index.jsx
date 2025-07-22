@@ -11,6 +11,8 @@ import MainLayout from '../layouts/MainLayout';
 import { isLoggedIn } from '../services/auth';
 import ProkerManagement from '../pages/ProkerManagement';
 import History from '../pages/History';
+import CalendarAdmin from '../pages/CalendarAdmin';
+import AddProker from '../pages/AddProker';
 
 function RequireAuth({ children }) {
   const location = useLocation();
@@ -38,6 +40,8 @@ const AppRoutes = () => (
                 <Route path="/report-upload" element={<ReportUpload />} />
                 <Route path="/proker-management" element={<ProkerManagement />} />
                 <Route path="/history" element={<History />} />
+                <Route path="/calendar-admin" element={<CalendarAdmin />} />
+                <Route path="/add-proker/:orgId" element={<AddProker />} />
               </Routes>
             </RequireAuth>
           }

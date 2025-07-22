@@ -177,6 +177,23 @@ const Navbar = () => {
             {item.icon}{item.label}
           </Link>
         ))}
+        {role === 'admin' && (
+          <Link
+            to="/calendar-admin"
+            style={{
+              color: location.pathname === '/calendar-admin' ? '#FFD700' : 'white',
+              textDecoration: 'none',
+              fontWeight: 'bold',
+              padding: '8px 12px',
+              borderRadius: 4,
+              background: location.pathname === '/calendar-admin' ? 'rgba(255,255,255,0.1)' : 'transparent',
+              transition: 'background 0.2s',
+              display: 'flex', alignItems: 'center',
+            }}
+          >
+            📅 Kalender
+          </Link>
+        )}
         <div style={{ position: 'relative' }}>
           <button
             onClick={() => setDropdown(d => !d)}

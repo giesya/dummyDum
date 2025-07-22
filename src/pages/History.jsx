@@ -90,6 +90,8 @@ const dummyData = {
   ],
 };
 
+
+
 function getHistoryData() {
   const data = localStorage.getItem('history_data');
   if (data) return JSON.parse(data);
@@ -103,10 +105,12 @@ function addHistoryItem(jenis, item) {
   localStorage.setItem('history_data', JSON.stringify(data));
 }
 
-function updateHistoryItem(jenis, id, update) {
+  function updateHistoryItem(jenis, id, updateObj) {
   const data = getHistoryData();
   if (!data[jenis]) return;
-  data[jenis] = data[jenis].map(item => item.id === id ? { ...item, ...update } : item);
+  data[jenis] = data[jenis].map(item =>
+    item.id === id ? { ...item, ...updateObj } : item
+  );
   localStorage.setItem('history_data', JSON.stringify(data));
 }
 
@@ -210,4 +214,4 @@ const History = () => {
 };
 
 export default History;
-export { addHistoryItem, updateHistoryItem }; 
+export { addHistoryItem, updateHistoryItem };

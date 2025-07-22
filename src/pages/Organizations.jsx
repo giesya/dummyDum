@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Modal from '../components/Modal';
 import { getRole } from '../services/auth';
 
@@ -32,9 +33,16 @@ const Organizations = () => {
   const [prokerData, setProkerData] = useState(getProkerFromStorage());
   const [newProker, setNewProker] = useState('');
   const [editingProker, setEditingProker] = useState({ org: null, idx: null, value: '' });
-  const [addingProker, setAddingProker] = useState({ org: null, value: '' });
+  const navigate = useNavigate();
 
-  useEffect(() => { setProkerData(getProkerFromStorage()); }, []);
+  useEffect(() => {
+    const storedOrganizations = JSON.parse(localStorage.getItem('organizations'));
+    if (storedOrganizations) {
+      setOrganizations(storedOrganizations);
+    } else {
+      localStorage.setItem('organizations', JSON.stringify(initialOrganizations));
+    }
+  }, []);
 
   // Tambah
   const handleAdd = () => setOpen(true);
@@ -119,54 +127,15 @@ const Organizations = () => {
                 <td>{org.name}</td>
                 <td>{org.description}</td>
                 <td style={{ minWidth: 180 }}>
-                  <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-                    {(prokerData[org.name] || []).map((proker, idx) => (
-                      <li key={proker} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-                        {editingProker.org === org.name && editingProker.idx === idx ? (
-                          <>
-                            <input value={editingProker.value} onChange={e => setEditingProker(ep => ({ ...ep, value: e.target.value }))} style={{ padding: 4, borderRadius: 4, border: '1px solid #ccc', fontSize: 14 }} />
-                            <button onClick={() => {
-                              const updated = { ...prokerData };
-                              updated[org.name][idx] = editingProker.value;
-                              setProkerToStorage(updated);
-                              setProkerData(updated);
-                              setEditingProker({ org: null, idx: null, value: '' });
-                            }} style={{ background: '#008000', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>Simpan</button>
-                            <button onClick={() => setEditingProker({ org: null, idx: null, value: '' })} style={{ background: '#aaa', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>Batal</button>
-                          </>
-                        ) : (
-                          <>
-                            <span>{proker}</span>
-                            {role === 'admin' && (
-                              <>
-                                <button onClick={() => setEditingProker({ org: org.name, idx, value: proker })} style={{ background: '#FFD700', color: '#800000', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>Edit</button>
-                                <button onClick={() => handleDeleteProkerIdx(org.name, idx)} style={{ background: '#d32f2f', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>Hapus</button>
-                              </>
-                            )}
-                          </>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                {role === 'admin' && (
-                    addingProker.org === org.name ? (
-                      <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-                        <input value={addingProker.value} onChange={e => setAddingProker(ap => ({ ...ap, value: e.target.value }))} style={{ padding: 4, borderRadius: 4, border: '1px solid #ccc', fontSize: 14 }} />
-                        <button onClick={() => {
-                          if (!addingProker.value.trim()) return;
-                          const updated = { ...prokerData };
-                          if (!updated[org.name].includes(addingProker.value.trim())) {
-                            updated[org.name].push(addingProker.value.trim());
-                            setProkerToStorage(updated);
-                            setProkerData(updated);
-                          }
-                          setAddingProker({ org: null, value: '' });
-                        }} style={{ background: '#800000', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>Tambah</button>
-                        <button onClick={() => setAddingProker({ org: null, value: '' })} style={{ background: '#aaa', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>Batal</button>
-                      </div>
-                    ) : (
-                      <button onClick={() => setAddingProker({ org: org.name, value: '' })} style={{ background: '#800000', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13, marginTop: 4 }}>+ Proker</button>
-                    )
+                  {role === 'admin' && (
+                    <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+                      <button onClick={() => navigate(`/add-proker/${org.name}`)} style={{ background: '#800000', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>
+                        Tambah Proker
+                      </button>
+                      <button onClick={() => navigate('/proker-management')} style={{ background: '#008000', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>
+                        Lihat Proker
+                      </button>
+                    </div>
                   )}
                 </td>
                 {role === 'admin' && <td>

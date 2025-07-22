@@ -23,6 +23,7 @@ const dummyData = {
       dokumen: 'proposal-seminar.pdf',
       komentar: '',
       signedFile: 'proposal-seminar-signed.pdf',
+      
     },
     {
       id: 7,
@@ -218,7 +219,7 @@ const ApprovalAll = () => {
         <thead style={{ background: '#eee' }}>
           <tr>
             <th style={{ padding: 12, textAlign: 'left' }}>Nama Dokumen</th>
-            <th style={{ padding: 12, textAlign: 'left' }}>Pengaju</th>
+            <th style={{ padding: 12, textAlign: 'left' }}>Pengajuan</th>
             <th style={{ padding: 12, textAlign: 'left' }}>Afiliasi</th>
             <th style={{ padding: 12, textAlign: 'left' }}>Dokumen</th>
             <th style={{ padding: 12, textAlign: 'left' }}>Status</th>
