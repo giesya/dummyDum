@@ -1,0 +1,21 @@
+{
+  "name": "SimawaFIF",
+  "short_name": "SimawaFIF",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#800000",
+  "description": "Portal Manajemen ORMAWA Telkom University",
+  "icons": [
+    {
+      "src": "/TelU-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/TelU-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+} 
