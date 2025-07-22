@@ -51,6 +51,7 @@ const DURASI_KEPANITIAAN_OPTIONS = [
 ];
 
 const FILE_ACCEPT = '.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,image/*,video/*,audio/*';
+const PEMINJAMAN_FILE_ACCEPT = '.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,image/*';
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const TEMA_PENGADUAN_OPTIONS = [
@@ -294,9 +295,9 @@ const ActivitySubmission = () => {
   };
 
   return (
-    <div className="activity-submission-container">
+    <div className="activity-submission-container" style={{ maxWidth: 2000, margin: '0 auto' }}>
       <h2>Pengajuan Kegiatan</h2>
-      <form onSubmit={handleSubmit} className="activity-submission-form">
+      <form onSubmit={handleSubmit} className="activity-submission-form" style={{ maxWidth: 1600, margin: '0 auto', padding: 32, background: 'white', borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
         <div className="form-row">
           <div className="form-col">
             <label htmlFor="afiliasi">Afiliasi</label>
@@ -466,7 +467,7 @@ const ActivitySubmission = () => {
               </div>
               <div className="form-col">
                 <label htmlFor="lembarPeminjaman">Lembar Peminjaman</label>
-                <input id="lembarPeminjaman" type="file" required accept={FILE_ACCEPT} onChange={e => {
+                <input id="lembarPeminjaman" type="file" required accept={PEMINJAMAN_FILE_ACCEPT} onChange={e => {
                   const file = e.target.files[0];
                   if (file && file.size > MAX_FILE_SIZE) {
                     setLembarPeminjamanError('Ukuran file maksimal 10MB');
@@ -479,7 +480,7 @@ const ActivitySubmission = () => {
                 <div style={{ fontSize: 13, color: '#888', marginTop: 6 }}>
                   Harus sudah ditanda tangan semua pihak kecuali KaUr Kemahasiswaan dan Logistik<br/>
                   File number limit: 1, Single file size limit: 10MB<br/>
-                  Allowed file types: Word, Excel, PPT, PDF, Image, Video, Audio
+                  Allowed file types: Word, Excel, PPT, PDF, Image
                 </div>
                 {lembarPeminjaman && <div style={{ fontSize: 13, color: '#800000', marginTop: 4 }}>File: {lembarPeminjaman.name}</div>}
                 {lembarPeminjamanError && <div style={{ color: 'red', fontSize: 13, marginTop: 4 }}>{lembarPeminjamanError}</div>}

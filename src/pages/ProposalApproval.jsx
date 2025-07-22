@@ -189,7 +189,7 @@ const ApprovalAll = () => {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: 1000, margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: 1600, margin: '0 auto' }}>
       <h2>Approval Dokumen</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', marginBottom: 18 }}>
         <div>

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Dashboard = () => {
   return (
-    <div style={{ padding: '2rem', maxWidth: 600, margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: 1600, margin: '0 auto' }}>
       <h1>Urusan Kemahasiswaan Fakultas Informatika</h1>
       <p style={{ fontSize: 17, margin: '18px 0 10px 0' }}>
         Pengajuan proposal, TAK, izin tempat, dan pengaduan lainnya.<br/>

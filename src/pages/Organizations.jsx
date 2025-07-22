@@ -29,7 +29,10 @@ const Organizations = () => {
   const [editOrg, setEditOrg] = useState(null);
   const [deleteOrg, setDeleteOrg] = useState(null);
   const role = getRole();
-  const [selectedHima, setSelectedHima] = useState(HIMA_LIST[0]);
+  // Filter out 'Independen' for admin only
+  const filteredOrganizations = role === 'admin' ? organizations.filter(org => org.name !== 'Independen') : organizations;
+  const filteredHimaList = role === 'admin' ? HIMA_LIST.filter(hima => hima !== 'Independen') : HIMA_LIST;
+  const [selectedHima, setSelectedHima] = useState(filteredHimaList[0]);
   const [prokerData, setProkerData] = useState(getProkerFromStorage());
   const [newProker, setNewProker] = useState('');
   const [editingProker, setEditingProker] = useState({ org: null, idx: null, value: '' });
@@ -104,7 +107,7 @@ const Organizations = () => {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: 800, margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: 1600, margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
         <h2>Manajemen Organisasi</h2>
         {role === 'admin' && (
@@ -115,18 +118,18 @@ const Organizations = () => {
         <table>
           <thead>
             <tr>
-              <th>Nama Organisasi</th>
-              <th>Deskripsi</th>
-              <th>Proker</th>
-              {role === 'admin' && <th>Aksi</th>}
+              <th style={{ padding: 8 }}>Nama Organisasi</th>
+              <th style={{ padding: 8 }}>Deskripsi</th>
+              <th style={{ padding: 8 }}>Proker</th>
+              {role === 'admin' && <th style={{ padding: 8 }}>Aksi</th>}
             </tr>
           </thead>
           <tbody>
-            {organizations.map(org => (
+            {filteredOrganizations.map(org => (
               <tr key={org.id}>
-                <td>{org.name}</td>
-                <td>{org.description}</td>
-                <td style={{ minWidth: 180 }}>
+                <td style={{ padding: 8 }}>{org.name}</td>
+                <td style={{ padding: 8 }}>{org.description}</td>
+                <td style={{ padding: 8, minWidth: 180 }}>
                   {role === 'admin' && (
                     <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
                       <button onClick={() => navigate(`/add-proker/${org.name}`)} style={{ background: '#800000', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>
@@ -138,7 +141,7 @@ const Organizations = () => {
                     </div>
                   )}
                 </td>
-                {role === 'admin' && <td>
+                {role === 'admin' && <td style={{ padding: 8 }}>
                     <button style={{ background: '#FFD700', color: '#800000', border: 'none', borderRadius: 4, padding: '4px 10px', marginRight: 6, fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleEdit(org)}>Edit</button>
                     <button style={{ background: '#d32f2f', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleDelete(org)}>Hapus</button>
                 </td>}

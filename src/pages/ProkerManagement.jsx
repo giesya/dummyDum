@@ -37,7 +37,7 @@ const ProkerManagement = () => {
   const prokers = currentOrg ? currentOrg.proker || [] : [];
 
   return (
-    <div style={{ padding: '2rem', maxWidth: 800, margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: 1600, margin: '0 auto' }}>
       <h2>Manajemen Proker ORMAWA</h2>
       <div style={{ marginBottom: 18 }}>
         <label>Pilih HIMA: </label>

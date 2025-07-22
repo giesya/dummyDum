@@ -80,7 +80,7 @@ const ReportUpload = () => {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: 1600, margin: '0 auto' }}>
       <h2>Approval Laporan Kegiatan</h2>
       {notif && <div style={{ background: '#FFD700', color: '#800000', padding: 10, borderRadius: 6, marginBottom: 18, fontWeight: 'bold' }}>{notif}</div>}
       <table style={{ width: '100%', borderCollapse: 'collapse', background: 'white', borderRadius: 8, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>

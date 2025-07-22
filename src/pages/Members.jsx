@@ -4,9 +4,10 @@ import { getRole, getUser } from '../services/auth';
 import { FaSearch } from 'react-icons/fa';
 
 const initialMembers = [
-  { id: 1, name: 'Andi', organization: 'BEM', email: 'andi@telkomuniversity.ac.id' },
-  { id: 2, name: 'Budi', organization: 'HIMA', email: 'budi@telkomuniversity.ac.id' },
-  { id: 3, name: 'Citra', organization: 'UKM', email: 'citra@telkomuniversity.ac.id' },
+  { id: 1, name: 'Andi', organization: 'HIMAIF', email: 'andi@student.telkomuniversity.ac.id', role: 'anggota' },
+  { id: 2, name: 'Budi', organization: 'HIMADS', email: 'budi@student.telkomuniversity.ac.id', role: 'anggota' },
+  { id: 3, name: 'Citra', organization: 'HMRPL', email: 'citra@student.telkomuniversity.ac.id', role: 'anggota' },
+  { id: 4, name: 'Gisa', organization: 'HMIT', email: 'gisasyahla@student.telkomuniversity.ac.id', role: 'anggota' }
 ];
 
 const Members = () => {
@@ -64,6 +65,14 @@ const Members = () => {
     return member.organization === userOrg;
   };
 
+  const handleSetAdminHima = member => {
+    setMembers(members => members.map(mem =>
+      mem.id === member.id
+        ? { ...mem, role: mem.role === 'admin_hima' ? 'anggota' : 'admin_hima' }
+        : mem
+    ));
+  };
+
   // Filter members by search
   const filteredMembers = members.filter(m =>
     m.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -71,14 +80,21 @@ const Members = () => {
   );
 
   // Group filtered members by organization
-  const groupedMembers = filteredMembers.reduce((acc, member) => {
+  let groupedMembers = filteredMembers.reduce((acc, member) => {
     if (!acc[member.organization]) acc[member.organization] = [];
     acc[member.organization].push(member);
     return acc;
   }, {});
+  // For admin, only show HIMAIF, HIMADS, HMIT, HMRPL
+  if (role === 'admin') {
+    const allowedOrgs = ['HIMAIF', 'HIMADS', 'HMIT', 'HMRPL'];
+    groupedMembers = Object.fromEntries(
+      Object.entries(groupedMembers).filter(([org]) => allowedOrgs.includes(org))
+    );
+  }
 
   return (
-    <div style={{ padding: '2rem', maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ padding: '2rem', maxWidth: 1600, margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
         <h2>Manajemen Anggota</h2>
         <button onClick={handleAdd} style={{ background: '#800000', color: 'white', border: 'none', borderRadius: 4, padding: '8px 16px', fontWeight: 'bold', cursor: 'pointer' }}>+ Tambah Anggota</button>
@@ -116,6 +132,11 @@ const Members = () => {
                     <>
                       <button style={{ background: '#FFD700', color: '#800000', border: 'none', borderRadius: 4, padding: '4px 10px', marginRight: 6, fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleEdit(member)}>Edit</button>
                       <button style={{ background: '#d32f2f', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleDelete(member)}>Hapus</button>
+                      {role === 'admin' && ['HIMAIF','HIMADS','HMIT','HMRPL'].includes(member.organization) && (
+                        <button style={{ background: member.role === 'admin_hima' ? '#aaa' : '#008000', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', fontWeight: 'bold', cursor: 'pointer', marginLeft: 6 }} onClick={() => handleSetAdminHima(member)}>
+                          {member.role === 'admin_hima' ? 'Cabut Admin HIMA' : 'Jadikan Admin HIMA'}
+                        </button>
+                      )}
                     </>
                   )}
                 </td>
@@ -131,7 +152,17 @@ const Members = () => {
           <label>Nama</label>
           <input name="name" value={form.name} onChange={handleChange} required />
           <label>Organisasi</label>
-          <input name="organization" value={form.organization} onChange={handleChange} required />
+          {role === 'admin' ? (
+            <select name="organization" value={form.organization} onChange={handleChange} required>
+              <option value="">Pilih organisasi</option>
+              <option value="HIMAIF">HIMAIF</option>
+              <option value="HIMADS">HIMADS</option>
+              <option value="HMIT">HMIT</option>
+              <option value="HMRPL">HMRPL</option>
+            </select>
+          ) : (
+            <input name="organization" value={form.organization} onChange={handleChange} required />
+          )}
           <label>Email</label>
           <input name="email" type="email" value={form.email} onChange={handleChange} required />
           <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
@@ -145,7 +176,17 @@ const Members = () => {
           <label>Nama</label>
           <input name="name" value={form.name} onChange={handleChange} required />
           <label>Organisasi</label>
-          <input name="organization" value={form.organization} onChange={handleChange} required />
+          {role === 'admin' ? (
+            <select name="organization" value={form.organization} onChange={handleChange} required>
+              <option value="">Pilih organisasi</option>
+              <option value="HIMAIF">HIMAIF</option>
+              <option value="HIMADS">HIMADS</option>
+              <option value="HMIT">HMIT</option>
+              <option value="HMRPL">HMRPL</option>
+            </select>
+          ) : (
+            <input name="organization" value={form.organization} onChange={handleChange} required />
+          )}
           <label>Email</label>
           <input name="email" type="email" value={form.email} onChange={handleChange} required />
           <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
