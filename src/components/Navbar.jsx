@@ -5,9 +5,14 @@ import { isLoggedIn, logout, getUser, getRole } from '../services/auth';
 
 const mainNav = [
   { to: '/', label: 'Dashboard', icon: <FaHome style={{ marginRight: 6 }} /> },
-  { to: '/history', label: 'Riwayat', icon: <FaClipboardList style={{ marginRight: 6 }} />, mahasiswaOnly: true },
-  { to: '/organizations', label: 'Organisasi', icon: <FaBuilding style={{ marginRight: 6 }} />, adminOnly: true },
-  { to: '/members', label: 'Anggota', icon: <FaUsers style={{ marginRight: 6 }} />, adminOnly: true },
+  // { to: '/history', label: 'Riwayat', icon: <FaClipboardList style={{ marginRight: 6 }} />, mahasiswaOnly: true },
+  // { to: '/organizations', label: 'Organisasi', icon: <FaBuilding style={{ marginRight: 6 }} />, adminOnly: true },
+  // { to: '/members', label: 'Anggota', icon: <FaUsers style={{ marginRight: 6 }} />, adminOnly: true },
+];
+
+const adminManagementNav = [
+  { to: '/organizations', label: 'Organisasi', icon: <FaBuilding style={{ marginRight: 6 }} /> },
+  { to: '/members', label: 'Anggota', icon: <FaUsers style={{ marginRight: 6 }} /> },
 ];
 
 const layananNavAdmin = [
@@ -71,11 +76,13 @@ function getHistoryNotifications(user) {
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [dropdown, setDropdown] = useState(false);
+  const [dropdownManajemen, setDropdownManajemen] = useState(false);
+  const [dropdownLayanan, setDropdownLayanan] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [mobileDropdown, setMobileDropdown] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifications, setNotifications] = useState(dummyNotifications);
+  const [userDropdown, setUserDropdown] = useState(false);
   const loggedIn = isLoggedIn();
   const user = getUser();
   const role = getRole();
@@ -172,11 +179,57 @@ const Navbar = () => {
               background: location.pathname === item.to ? 'rgba(255,255,255,0.1)' : 'transparent',
               transition: 'background 0.2s',
               display: 'flex', alignItems: 'center',
+              fontFamily: 'Poppins, Arial, sans-serif',
             }}
           >
             {item.icon}{item.label}
           </Link>
         ))}
+        {role === 'admin' && (
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => {
+                setDropdownManajemen(d => !d);
+                setDropdownLayanan(false);
+              }}
+              style={{
+                background: (dropdownManajemen || location.pathname === '/organizations' || location.pathname === '/members') ? '#FFD700' : 'transparent',
+                color: (dropdownManajemen || location.pathname === '/organizations' || location.pathname === '/members') ? '#800000' : 'white',
+                border: 'none', borderRadius: 4, padding: '8px 12px', fontWeight: (dropdownManajemen || location.pathname === '/organizations' || location.pathname === '/members') ? 'bold' : 'bold', cursor: 'pointer', minWidth: 90, display: 'flex', alignItems: 'center', gap: 6,
+                fontFamily: 'Poppins, Arial, sans-serif',
+                boxShadow: 'none',
+                fontSize: 18,
+              }}
+            >
+              <FaBuilding style={{ marginRight: 6 }} /> Manajemen
+              <FaChevronDown style={{ marginLeft: 6, transition: 'transform 0.2s', transform: dropdownManajemen ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+            </button>
+            {dropdownManajemen && (
+              <div
+                style={{
+                  position: 'absolute', top: '110%', left: 0, background: 'white', color: '#800000', borderRadius: 6, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', minWidth: 200, zIndex: 10,
+                  fontFamily: 'Poppins, Arial, sans-serif',
+                }}
+                onMouseLeave={() => setDropdownManajemen(false)}
+              >
+                {adminManagementNav.map(item => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    style={{
+                      display: 'flex', alignItems: 'center', padding: '10px 16px', color: '#800000', textDecoration: 'none', borderBottom: '1px solid #eee', fontWeight: location.pathname === item.to ? 'bold' : 'normal',
+                      background: location.pathname === item.to ? '#f5f5f5' : 'white',
+                      fontFamily: 'Poppins, Arial, sans-serif',
+                    }}
+                    onClick={() => setDropdownManajemen(false)}
+                  >
+                    {item.icon}{item.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         {role === 'admin' && (
           <Link
             to="/calendar-admin"
@@ -189,6 +242,7 @@ const Navbar = () => {
               background: location.pathname === '/calendar-admin' ? 'rgba(255,255,255,0.1)' : 'transparent',
               transition: 'background 0.2s',
               display: 'flex', alignItems: 'center',
+              fontFamily: 'Poppins, Arial, sans-serif',
             }}
           >
             <FaCalendarAlt style={{ marginRight: 6 }} />Kalender
@@ -196,19 +250,30 @@ const Navbar = () => {
         )}
         <div style={{ position: 'relative' }}>
           <button
-            onClick={() => setDropdown(d => !d)}
+            onClick={() => {
+              setDropdownLayanan(d => !d);
+              setDropdownManajemen(false);
+            }}
             style={{
-              background: 'rgba(255,255,255,0.1)', color: 'white', border: 'none', borderRadius: 4, padding: '8px 12px', fontWeight: 'bold', cursor: 'pointer', minWidth: 90, display: 'flex', alignItems: 'center', gap: 6
+              background: (dropdownLayanan || layananNav.some(item => location.pathname === item.to)) ? '#FFD700' : 'transparent',
+              color: (dropdownLayanan || layananNav.some(item => location.pathname === item.to)) ? '#800000' : 'white',
+              border: 'none', borderRadius: 4, padding: '8px 12px', fontWeight: (dropdownLayanan || layananNav.some(item => location.pathname === item.to)) ? 'bold' : 'bold', cursor: 'pointer', minWidth: 90, display: 'flex', alignItems: 'center', gap: 6,
+              fontFamily: 'Poppins, Arial, sans-serif',
+              boxShadow: 'none',
+              fontSize: 18,
             }}
           >
-            <FaChevronDown style={{ marginRight: 4 }} /> Layanan
+            <FaClipboardList style={{ marginRight: 6 }} />
+            Layanan
+            <FaChevronDown style={{ marginLeft: 6, transition: 'transform 0.2s', transform: dropdownLayanan ? 'rotate(180deg)' : 'rotate(0deg)' }} />
           </button>
-          {dropdown && (
+          {dropdownLayanan && (
             <div
               style={{
-                position: 'absolute', top: '110%', left: 0, background: 'white', color: '#800000', borderRadius: 6, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', minWidth: 200, zIndex: 10
+                position: 'absolute', top: '110%', left: 0, background: 'white', color: '#800000', borderRadius: 6, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', minWidth: 200, zIndex: 10,
+                fontFamily: 'Poppins, Arial, sans-serif',
               }}
-              onMouseLeave={() => setDropdown(false)}
+              onMouseLeave={() => setDropdownLayanan(false)}
             >
               {layananNav.map(item => (
                 <Link
@@ -217,8 +282,9 @@ const Navbar = () => {
                   style={{
                     display: 'flex', alignItems: 'center', padding: '10px 16px', color: '#800000', textDecoration: 'none', borderBottom: '1px solid #eee', fontWeight: location.pathname === item.to ? 'bold' : 'normal',
                     background: location.pathname === item.to ? '#f5f5f5' : 'white',
+                    fontFamily: 'Poppins, Arial, sans-serif',
                   }}
-                  onClick={() => setDropdown(false)}
+                  onClick={() => setDropdownLayanan(false)}
                 >
                   {item.icon}{item.label}
                 </Link>
@@ -226,46 +292,57 @@ const Navbar = () => {
             </div>
           )}
         </div>
-        {/* Notifikasi Bell */}
-        <div style={{ position: 'relative', marginLeft: 10 }}>
-          <button
-            onClick={handleNotifClick}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', padding: 0 }}
-            aria-label="Notifikasi"
-          >
-            <FaBell size={22} color="white" />
-            {notifications.length > 0 && (
-              <span style={{ position: 'absolute', top: -4, right: -4, background: '#d32f2f', color: 'white', borderRadius: '50%', fontSize: 11, padding: '2px 6px', fontWeight: 'bold' }}>{notifications.length}</span>
-            )}
-          </button>
-          {notifOpen && (
-            <div style={{ position: 'absolute', right: 0, top: '120%', background: 'white', color: '#800000', borderRadius: 6, boxShadow: '0 2px 8px rgba(0,0,0,0.12)', minWidth: 260, zIndex: 20 }}>
-              <div style={{ fontWeight: 'bold', padding: '10px 16px', borderBottom: '1px solid #eee', background: '#f5f5f5', borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>Notifikasi</div>
-              {notifications.length === 0 ? (
-                <div style={{ padding: '16px', color: '#888', textAlign: 'center' }}>Tidak ada notifikasi baru</div>
-              ) : (
-                notifications.map(notif => (
-                  <div key={notif.id} style={{ padding: '10px 16px', borderBottom: '1px solid #f0f0f0', fontSize: 14 }}>
-                    <div style={{ fontWeight: 500 }}>{notif.message}</div>
-                    <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>{notif.time}</div>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-        </div>
       </div>
       {/* Login/Logout desktop */}
       {loggedIn ? (
-        <div style={{ display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 14, marginRight: 6 }}>{user}</span>
-          <span style={{
-            background: role === 'admin' ? '#d32f2f' : '#888',
-            color: 'white', borderRadius: 6, padding: '2px 10px', fontSize: 12, fontWeight: 'bold', marginRight: 6
-          }}>{role === 'admin' ? 'Admin' : 'Mahasiswa'}</span>
-          <button onClick={handleLogout} style={{ background: '#d32f2f', color: 'white', border: 'none', borderRadius: 4, padding: '8px 12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-            <FaSignOutAlt style={{ marginRight: 6 }} /> Logout
+        <div style={{ display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: 16, position: 'relative', marginRight: 24 }}>
+          {/* Notifikasi Bell */}
+          <div style={{ position: 'relative', marginRight: 2 }}>
+            <button
+              onClick={handleNotifClick}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', padding: 0 }}
+              aria-label="Notifikasi"
+            >
+              <FaBell size={22} color="white" />
+              {notifications.length > 0 && (
+                <span style={{ position: 'absolute', top: -4, right: -4, background: '#d32f2f', color: 'white', borderRadius: '50%', fontSize: 11, padding: '2px 6px', fontWeight: 'bold' }}>{notifications.length}</span>
+              )}
+            </button>
+            {notifOpen && (
+              <div style={{ position: 'absolute', right: 0, top: '120%', background: 'white', color: '#800000', borderRadius: 6, boxShadow: '0 2px 8px rgba(0,0,0,0.12)', minWidth: 260, zIndex: 20 }}>
+                <div style={{ fontWeight: 'bold', padding: '10px 16px', borderBottom: '1px solid #eee', background: '#f5f5f5', borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>Notifikasi</div>
+                {notifications.length === 0 ? (
+                  <div style={{ padding: '16px', color: '#888', textAlign: 'center' }}>Tidak ada notifikasi baru</div>
+                ) : (
+                  notifications.map(notif => (
+                    <div key={notif.id} style={{ padding: '10px 16px', borderBottom: '1px solid #f0f0f0', fontSize: 14 }}>
+                      <div style={{ fontWeight: 500 }}>{notif.message}</div>
+                      <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>{notif.time}</div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+          {/* Badge Role */}
+          <button
+            onClick={() => { setUserDropdown(d => !d); setDropdownManajemen(false); }}
+            style={{
+              background: role === 'admin' ? '#d32f2f' : '#888',
+              color: 'white', borderRadius: 6, padding: '6px 18px', fontSize: 14, fontWeight: 'bold', border: 'none', cursor: 'pointer', minWidth: 80, boxShadow: 'none', display: 'flex', alignItems: 'center', gap: 8
+            }}
+          >
+            {role === 'admin' ? 'Admin' : 'Mahasiswa'}
+            <FaChevronDown style={{ marginLeft: 6, transition: 'transform 0.2s', transform: userDropdown ? 'rotate(180deg)' : 'rotate(0deg)' }} />
           </button>
+          {userDropdown && (
+            <div style={{ position: 'absolute', right: 0, top: '110%', background: 'white', color: '#800000', borderRadius: 8, boxShadow: '0 2px 12px rgba(0,0,0,0.13)', minWidth: 220, zIndex: 30, padding: 18, fontFamily: 'Poppins, Arial, sans-serif' }}>
+              <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 8, color: '#222', wordBreak: 'break-all' }}>{user}</div>
+              <button onClick={handleLogout} style={{ background: '#d32f2f', color: 'white', border: 'none', borderRadius: 6, padding: '10px 0', fontWeight: 'bold', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontSize: 16, marginTop: 8, cursor: 'pointer' }}>
+                <FaSignOutAlt style={{ marginRight: 6 }} /> Logout
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <Link
@@ -301,16 +378,66 @@ const Navbar = () => {
             {item.icon}{item.label}
           </Link>
         ))}
+        {/* Tambahkan dropdown Manajemen di mobile untuk admin */}
+        {role === 'admin' && (
+          <div>
+            <button
+              onClick={() => setMobileDropdown(d => d === 'manajemen' ? '' : 'manajemen')}
+              style={{
+                background: (mobileDropdown === 'manajemen' || location.pathname === '/organizations' || location.pathname === '/members') ? '#FFD700' : 'rgba(255,255,255,0.1)',
+                color: (mobileDropdown === 'manajemen' || location.pathname === '/organizations' || location.pathname === '/members') ? '#800000' : 'white',
+                border: 'none', borderRadius: 4, padding: '10px 0', fontWeight: 'bold', cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', gap: 8, fontSize: 18, marginTop: 8
+              }}
+            >
+              <FaBuilding style={{ marginRight: 6 }} /> Manajemen <FaChevronDown style={{ marginLeft: 6, transition: 'transform 0.2s', transform: mobileDropdown === 'manajemen' ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+            </button>
+            {mobileDropdown === 'manajemen' && (
+              <div style={{ marginTop: 4, background: 'white', borderRadius: 6, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
+                {adminManagementNav.map(item => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    style={{
+                      display: 'flex', alignItems: 'center', padding: '10px 16px', color: '#800000', textDecoration: 'none', borderBottom: '1px solid #eee', fontWeight: location.pathname === item.to ? 'bold' : 'normal', background: location.pathname === item.to ? '#f5f5f5' : 'white', fontSize: 17
+                    }}
+                    onClick={() => { setMobileMenu(false); setMobileDropdown(''); }}
+                  >
+                    {item.icon}{item.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {/* Kalender di mobile */}
+        {role === 'admin' && (
+          <Link
+            to="/calendar-admin"
+            style={{
+              color: location.pathname === '/calendar-admin' ? '#FFD700' : 'white',
+              textDecoration: 'none', fontWeight: 'bold', padding: '10px 0', borderRadius: 4, display: 'flex', alignItems: 'center', fontSize: 18,
+              background: location.pathname === '/calendar-admin' ? 'rgba(255,255,255,0.1)' : 'transparent',
+            }}
+            onClick={() => setMobileMenu(false)}
+          >
+            <FaCalendarAlt style={{ marginRight: 6 }} />Kalender
+          </Link>
+        )}
+        {/* Layanan di mobile */}
         <div>
           <button
-            onClick={() => setMobileDropdown(d => !d)}
+            onClick={() => setMobileDropdown(d => d === 'layanan' ? '' : 'layanan')}
             style={{
-              background: 'rgba(255,255,255,0.1)', color: 'white', border: 'none', borderRadius: 4, padding: '10px 0', fontWeight: 'bold', cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', gap: 8, fontSize: 18, marginTop: 8
+              background: mobileDropdown === 'layanan' ? '#FFD700' : 'rgba(255,255,255,0.1)',
+              color: mobileDropdown === 'layanan' ? '#800000' : 'white',
+              border: 'none', borderRadius: 4, padding: '10px 0', fontWeight: 'bold', cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', gap: 8, fontSize: 18, marginTop: 8
             }}
           >
-            <FaChevronDown /> Layanan
+            <FaClipboardList style={{ marginRight: 6 }} />
+            Layanan
+            <FaChevronDown style={{ marginLeft: 6, transition: 'transform 0.2s', transform: mobileDropdown === 'layanan' ? 'rotate(180deg)' : 'rotate(0deg)' }} />
           </button>
-          {mobileDropdown && (
+          {mobileDropdown === 'layanan' && (
             <div style={{ marginTop: 4, background: 'white', borderRadius: 6, boxShadow: '0 2px 8px rgba(0,0,0,0.08)', overflow: 'hidden' }}>
               {layananNav.map(item => (
                 <Link
@@ -319,7 +446,7 @@ const Navbar = () => {
                   style={{
                     display: 'flex', alignItems: 'center', padding: '10px 16px', color: '#800000', textDecoration: 'none', borderBottom: '1px solid #eee', fontWeight: location.pathname === item.to ? 'bold' : 'normal', background: location.pathname === item.to ? '#f5f5f5' : 'white', fontSize: 17
                   }}
-                  onClick={() => { setMobileMenu(false); setMobileDropdown(false); }}
+                  onClick={() => { setMobileMenu(false); setMobileDropdown(''); }}
                 >
                   {item.icon}{item.label}
                 </Link>
