@@ -1,11 +1,11 @@
 {
-  "name": "PORMAWA-FIF",
-  "short_name": "PORMAWA-FIF",
+  "name": "PORMAWA FIF",
+  "short_name": "PORMAWA FIF",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fff",
   "theme_color": "#800000",
-  "description": "Portal Manajemen ORMAWA Telkom University",
+  "description": "Portal Manajemen ORMAWA Fakultas Informatika",
   "icons": [
     {
       "src": "/TelU-logo.png",
