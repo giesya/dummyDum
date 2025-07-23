@@ -7,13 +7,13 @@ const MainLayout = ({ children }) => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {!isLoginPage && (
         <header style={{ background: '#800000', color: 'white', padding: 0 }}>
           <Navbar />
         </header>
       )}
-      <main>{children}</main>
+      <main style={{ flex: 1 }}>{children}</main>
       {!isLoginPage && (
         <footer style={{ background: '#eee', textAlign: 'center', padding: '1.5rem 1rem 1rem 1rem', marginTop: 24 }}>
           <div style={{ maxWidth: 700, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>

@@ -114,41 +114,29 @@ const Organizations = () => {
           <button onClick={handleAdd} style={{ background: '#800000', color: 'white', border: 'none', borderRadius: 4, padding: '8px 16px', fontWeight: 'bold', cursor: 'pointer' }}>+ Tambah Organisasi</button>
         )}
       </div>
-      <div style={{ marginTop: 24 }}>
-        <table>
-          <thead>
-            <tr>
-              <th style={{ padding: 8 }}>Nama Organisasi</th>
-              <th style={{ padding: 8 }}>Deskripsi</th>
-              <th style={{ padding: 8 }}>Proker</th>
-              {role === 'admin' && <th style={{ padding: 8 }}>Aksi</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredOrganizations.map(org => (
-              <tr key={org.id}>
-                <td style={{ padding: 8 }}>{org.name}</td>
-                <td style={{ padding: 8 }}>{org.description}</td>
-                <td style={{ padding: 8, minWidth: 180 }}>
-                  {role === 'admin' && (
-                    <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-                      <button onClick={() => navigate(`/add-proker/${org.name}`)} style={{ background: '#800000', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>
-                        Tambah Proker
-                      </button>
-                      <button onClick={() => navigate('/proker-management')} style={{ background: '#008000', color: 'white', border: 'none', borderRadius: 4, padding: '2px 8px', fontSize: 13 }}>
-                        Lihat Proker
-                      </button>
-                    </div>
-                  )}
-                </td>
-                {role === 'admin' && <td style={{ padding: 8 }}>
-                    <button style={{ background: '#FFD700', color: '#800000', border: 'none', borderRadius: 4, padding: '4px 10px', marginRight: 6, fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleEdit(org)}>Edit</button>
-                    <button style={{ background: '#d32f2f', color: 'white', border: 'none', borderRadius: 4, padding: '4px 10px', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleDelete(org)}>Hapus</button>
-                </td>}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        {filteredOrganizations.map(org => (
+          <div key={org.id} style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 14, boxShadow: '0 2px 12px #80000011', padding: '24px 32px', gap: 32, flexWrap: 'wrap' }}>
+            <div style={{ flex: 2, minWidth: 180 }}>
+              <div style={{ fontWeight: 700, fontSize: 20, color: '#800000', marginBottom: 6 }}>{org.name}</div>
+              <div style={{ color: '#333', fontSize: 16 }}>{org.description}</div>
+            </div>
+            <div style={{ flex: 1, minWidth: 180, display: 'flex', gap: 8 }}>
+              <button onClick={() => navigate(`/add-proker/${org.name}`)} style={{ background: '#800000', color: 'white', border: 'none', borderRadius: 4, padding: '8px 18px', fontSize: 15, fontWeight: 600 }}>
+                Tambah Proker
+              </button>
+              <button onClick={() => navigate('/proker-management')} style={{ background: '#008000', color: 'white', border: 'none', borderRadius: 4, padding: '8px 18px', fontSize: 15, fontWeight: 600 }}>
+                Lihat Proker
+              </button>
+            </div>
+            {role === 'admin' && (
+              <div style={{ flex: 1, minWidth: 160, display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+                <button style={{ background: '#FFD700', color: '#800000', border: 'none', borderRadius: 4, padding: '8px 18px', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleEdit(org)}>Edit</button>
+                <button style={{ background: '#d32f2f', color: 'white', border: 'none', borderRadius: 4, padding: '8px 18px', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => handleDelete(org)}>Hapus</button>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
       {/* Modal Tambah */}
       <Modal open={open} onClose={handleClose} title="Tambah Organisasi">
