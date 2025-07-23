@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaHome, FaUsers, FaBuilding, FaSignInAlt, FaChevronDown, FaClipboardList, FaCheckCircle, FaUpload, FaBars, FaTimes, FaSignOutAlt, FaBell } from 'react-icons/fa';
+import { FaHome, FaUsers, FaBuilding, FaSignInAlt, FaChevronDown, FaClipboardList, FaCheckCircle, FaUpload, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCalendarAlt } from 'react-icons/fa';
 import { isLoggedIn, logout, getUser, getRole } from '../services/auth';
 
 const mainNav = [
@@ -191,7 +191,7 @@ const Navbar = () => {
               display: 'flex', alignItems: 'center',
             }}
           >
-            📅 Kalender
+            <FaCalendarAlt style={{ marginRight: 6 }} />Kalender
           </Link>
         )}
         <div style={{ position: 'relative' }}>
